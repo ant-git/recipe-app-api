@@ -43,13 +43,14 @@ class PrivateIngredientApiTests(TestCase):
         Ingredient.objects.create(user=self.user, name='Salt')
 
         res = self.client.get(INGREDIENTS_URL)
-        ingredients = Ingredient.object.all().order_by('-name')
+        ingredients = Ingredient.objects.all().order_by('-name')
         serializer = IngredientSerializer(ingredients, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data, serializers.data)
+        self.assertEqual(res.data, serializer.data)
 
     def test_ingredients_limited_to_user(self):
-        """Test that only ingredients for the authenticated user are returned"""
+        """Test that only ingredients for \n
+        the authenticated user are returned"""
         user2 = get_user_model().objects.create_user(
             'other@someemail.com',
             'testpass'
