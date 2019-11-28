@@ -38,7 +38,7 @@ class PrivateTagsApiTests(TestCase):
     def test_retrieve_tags(self):
         """Test retrieving tags"""
         Tag.objects.create(user=self.user, name='Vegan')
-        Tag.obkects.create(user=self.user, name='Dessert')
+        Tag.objects.create(user=self.user, name='Dessert')
 
         res = self.client.get(TAGS_URL)
         tags = Tag.objects.all().order_by('-name')
