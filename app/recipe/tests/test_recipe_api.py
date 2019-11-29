@@ -17,7 +17,7 @@ def detail_url(recipe_id):
     return reverse('recipe:recipe-detail', args=[recipe_id])
 
 
-def sample__tag(user, name='Main course'):
+def sample_tag(user, name='Main course'):
     """Create and return a sample tag"""
     return Tag.objects.create(user=user, name=name)
 
@@ -94,7 +94,7 @@ class PrivateRecipeApiTests(TestCase):
     def test_view_recipe_detail(self):
         """Test viewing a recipe detail"""
         recipe = sample_recipe(user=self.user)
-        recipe.tags.add(sample__tag(user=self.user))
+        recipe.tags.add(sample_tag(user=self.user))
         recipe.ingredients.add(sample_ingredient(user=self.user))
 
         url = detail_url(recipe.id)
@@ -112,20 +112,21 @@ class PrivateRecipeApiTests(TestCase):
         }
         res = self.client.post(RECIPES_URL, payload)
 
-        self.assertEqual(res.status, res.status_code.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         recipe = Recipe.objects.get(id=res.data['id'])
         for key in payload.keys():
             self.assertEqual(payload[key], getattr(recipe, key))
 
     def test_create_recipe_with_tags(self):
         """Test creating a recipe with tags"""
-        tag1 = sample_tag(user=self.user, name='Vegan')
-        tag2 = sample_tag(user=self.user, name='Dessert')
+        tag1 = sample_tag(user=self.user, name='Tag 1')
+        tag2 = sample_tag(user=self.user, name='Tag 2')
         payload = {
-            'title': 'Avocado time cheesecake',
+            'title': 'Test recipe with two tags',
             'tags': [tag1.id, tag2.id],
-            'price': 20.00
-        }
+            'time_minutes': 30,
+            'price': 10.00
+            }
         res = self.client.post(RECIPES_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
