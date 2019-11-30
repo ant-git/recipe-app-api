@@ -227,7 +227,7 @@ class RecipeImageUploadTests(TestCase):
             res = self.client.post(url, {'image': ntf}, format='multipart')
         self.recipe.refresh_from_db()
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.asserIn('image', res.data)
+        self.assertIn('image', res.data)
         self.assertTrue(os.path.exists(self.recipe.image.path))
 
     def test_upload_image_bad_request(self):
